@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import API_URL from '../config/api';
 import '../styles/Auth.css';
 import '../styles/Signup.css';
 
@@ -86,7 +87,7 @@ function UserSignup({ onLoginSuccess }) {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:3000/api/auth/register', {
+      const response = await axios.post(`${API_URL}/api/auth/register`, {
         ...formData,
         role: 'user', // Always user role
       });
@@ -103,7 +104,7 @@ function UserSignup({ onLoginSuccess }) {
   };
 
   const handleGoogleSignup = () => {
-    window.location.href = 'http://localhost:3000/api/auth/google';
+    window.location.href = `${API_URL}/api/auth/google`;
   };
 
   return (

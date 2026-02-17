@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import API_URL from '../config/api';
 import '../styles/Login.css';
 
 function Login({ onLoginSuccess }) {
@@ -32,7 +33,7 @@ function Login({ onLoginSuccess }) {
         ? { email: formData.email, password: formData.password }
         : formData;
 
-      const response = await axios.post(`http://localhost:3000${endpoint}`, payload);
+      const response = await axios.post(`${API_URL}${endpoint}`, payload);
 
       if (response.data.user) {
         localStorage.setItem('user', JSON.stringify(response.data.user));

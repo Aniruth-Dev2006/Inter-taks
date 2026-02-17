@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import API_URL from '../config/api';
 import PaymentModal from './PaymentModal';
 import Toast from './Toast';
 import '../styles/UserDashboard.css';
@@ -29,7 +30,7 @@ function UserDashboard({ user }) {
   const fetchSlots = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:3000/api/slots');
+      const response = await axios.get(`${API_URL}/api/slots`);
       setSlots(response.data);
     } catch (err) {
       console.error('Error fetching slots:', err);
@@ -40,7 +41,7 @@ function UserDashboard({ user }) {
 
   const fetchBookings = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/api/bookings/my-bookings/${user.id}`);
+      const response = await axios.get(`${API_URL}/api/bookings/my-bookings/${user.id}`);
       setBookings(response.data);
     } catch (err) {
       console.error('Error fetching bookings:', err);
@@ -62,7 +63,7 @@ function UserDashboard({ user }) {
 
   const handleCancelBooking = async (bookingId) => {
     try {
-      await axios.delete(`http://localhost:3000/api/bookings/${bookingId}/${user.id}`);
+      await axios.delete(`${API_URL}/api/bookings/${bookingId}/${user.id}`);
       setToast({ message: 'Booking cancelled successfully!', type: 'success' });
       fetchBookings();
       fetchSlots();

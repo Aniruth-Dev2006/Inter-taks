@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import API_URL from '../config/api';
 import '../styles/PaymentModal.css';
 
 function PaymentModal({ slot, user, onClose, onSuccess }) {
@@ -13,7 +14,7 @@ function PaymentModal({ slot, user, onClose, onSuccess }) {
     try {
       // Create order
       const orderResponse = await axios.post(
-        'http://localhost:3000/api/payment/create-order',
+        `${API_URL}/api/payment/create-order`,
         { slotId: slot._id },
         { headers: { 'x-user-id': user.id } }
       );
@@ -29,7 +30,7 @@ function PaymentModal({ slot, user, onClose, onSuccess }) {
           try {
             // Verify payment
             const verifyResponse = await axios.post(
-              'http://localhost:3000/api/payment/verify-payment',
+              `${API_URL}/api/payment/verify-payment`,
               {
                 slotId: slot._id,
                 razorpay_payment_id: response.razorpay_payment_id,
@@ -41,7 +42,7 @@ function PaymentModal({ slot, user, onClose, onSuccess }) {
 
             // Download invoice
             const invoiceResponse = await axios.get(
-              `http://localhost:3000/api/payment/invoice/${verifyResponse.data.booking._id}`,
+              `${API_URL}/api/payment/invoice/${verifyResponse.data.booking._id}`,
               {
                 headers: { 'x-user-id': user.id },
                 responseType: 'blob',

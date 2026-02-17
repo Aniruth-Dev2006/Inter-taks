@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import API_URL from '../config/api';
 import Toast from './Toast';
 import '../styles/TeacherManagement.css';
 
@@ -22,7 +23,7 @@ function TeacherManagement({ user, onTeacherUpdate }) {
 
   const fetchTeachers = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/teachers');
+      const response = await axios.get(`${API_URL}/api/teachers`);
       setTeachers(response.data);
     } catch (err) {
       console.error('Error fetching teachers:', err);
@@ -44,7 +45,7 @@ function TeacherManagement({ user, onTeacherUpdate }) {
     try {
       if (editingId) {
         await axios.put(
-          `http://localhost:3000/api/teachers/${editingId}`,
+          `${API_URL}/api/teachers/${editingId}`,
           formData,
           {
             headers: {
@@ -55,7 +56,7 @@ function TeacherManagement({ user, onTeacherUpdate }) {
         setToast({ message: 'Teacher updated successfully!', type: 'success' });
       } else {
         await axios.post(
-          'http://localhost:3000/api/teachers',
+          `${API_URL}/api/teachers`,
           formData,
           {
             headers: {
@@ -92,7 +93,7 @@ function TeacherManagement({ user, onTeacherUpdate }) {
     if (!window.confirm('Are you sure you want to delete this teacher?')) return;
 
     try {
-      await axios.delete(`http://localhost:3000/api/teachers/${id}`, {
+      await axios.delete(`${API_URL}/api/teachers/${id}`, {
         headers: {
           'x-user-id': user.id,
         },

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import API_URL from '../config/api';
 import '../styles/Auth.css';
 
 function Signin({ onSwitchToSignup, onLoginSuccess }) {
@@ -26,7 +27,7 @@ function Signin({ onSwitchToSignup, onLoginSuccess }) {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:3000/api/auth/login', formData);
+      const response = await axios.post(`${API_URL}/api/auth/login`, formData);
 
       if (response.data.user) {
         localStorage.setItem('user', JSON.stringify(response.data.user));
@@ -40,7 +41,7 @@ function Signin({ onSwitchToSignup, onLoginSuccess }) {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = 'http://localhost:3000/api/auth/google';
+    window.location.href = `${API_URL}/api/auth/google`;
   };
 
   return (

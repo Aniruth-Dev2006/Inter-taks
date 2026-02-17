@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import API_URL from '../config/api';
 import '../styles/AdminDashboard.css';
 import TeacherManagement from './TeacherManagement';
 import SlotManagement from './SlotManagement';
@@ -29,9 +30,9 @@ function AdminDashboard({ user }) {
   const fetchStats = async () => {
     try {
       const [teachersRes, slotsRes, bookingsRes] = await Promise.all([
-        axios.get('http://localhost:3000/api/teachers'),
-        axios.get('http://localhost:3000/api/slots'),
-        axios.get('http://localhost:3000/api/bookings/all'),
+        axios.get(`${API_URL}/api/teachers`),
+        axios.get(`${API_URL}/api/slots`),
+        axios.get(`${API_URL}/api/bookings/all`),
       ]);
 
       setStats({
@@ -46,7 +47,7 @@ function AdminDashboard({ user }) {
 
   const fetchAllBookings = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/bookings/all');
+      const response = await axios.get(`${API_URL}/api/bookings/all`);
       setAllBookings(response.data);
     } catch (err) {
       console.error('Error fetching bookings:', err);

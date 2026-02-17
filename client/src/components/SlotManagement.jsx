@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import API_URL from '../config/api';
 import Toast from './Toast';
 import '../styles/SlotManagement.css';
 
@@ -36,7 +37,7 @@ function SlotManagement({ user, onSlotUpdate }) {
 
   const fetchSlots = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/slots');
+      const response = await axios.get(`${API_URL}/api/slots`);
       setSlots(response.data);
     } catch (err) {
       console.error('Error fetching slots:', err);
@@ -45,7 +46,7 @@ function SlotManagement({ user, onSlotUpdate }) {
 
   const fetchTeachers = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/teachers');
+      const response = await axios.get(`${API_URL}/api/teachers`);
       setTeachers(response.data);
     } catch (err) {
       console.error('Error fetching teachers:', err);
@@ -78,7 +79,7 @@ function SlotManagement({ user, onSlotUpdate }) {
     try {
       if (editingId) {
         await axios.put(
-          `http://localhost:3000/api/slots/${editingId}`,
+          `${API_URL}/api/slots/${editingId}`,
           formData,
           {
             headers: {
@@ -89,7 +90,7 @@ function SlotManagement({ user, onSlotUpdate }) {
         setToast({ message: 'Slot updated successfully!', type: 'success' });
       } else {
         await axios.post(
-          'http://localhost:3000/api/slots',
+          `${API_URL}/api/slots`,
           formData,
           {
             headers: {
@@ -145,7 +146,7 @@ function SlotManagement({ user, onSlotUpdate }) {
     if (!window.confirm('Are you sure you want to delete this slot?')) return;
 
     try {
-      await axios.delete(`http://localhost:3000/api/slots/${id}`, {
+      await axios.delete(`${API_URL}/api/slots/${id}`, {
         headers: {
           'x-user-id': user.id,
         },

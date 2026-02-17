@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import API_URL from '../config/api';
 import '../styles/Auth.css';
 
 function Signup({ onSwitchToLogin, onSignupSuccess }) {
@@ -26,7 +27,7 @@ function Signup({ onSwitchToLogin, onSignupSuccess }) {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:3000/api/auth/register', formData);
+      const response = await axios.post(`${API_URL}/api/auth/register`, formData);
 
       if (response.data.user) {
         localStorage.setItem('user', JSON.stringify(response.data.user));
@@ -40,7 +41,7 @@ function Signup({ onSwitchToLogin, onSignupSuccess }) {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = 'http://localhost:3000/api/auth/google';
+    window.location.href = `${API_URL}/api/auth/google`;
   };
 
   return (
