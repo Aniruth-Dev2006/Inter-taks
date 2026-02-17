@@ -9,7 +9,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174'],
+  origin: process.env.CLIENT_URL || ['http://localhost:5173', 'http://localhost:5174'],
   credentials: true,
 }));
 app.use(express.json());
@@ -50,6 +50,13 @@ app.get("/", function(req, res) {
   res.send("Slot Booking System API is running");
 });
 
-app.listen(3000, function() {
-  console.log("Server is running on port 3000");
-});
+// For Vercel serverless functions
+module.exports = app;
+
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, function() {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
