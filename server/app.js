@@ -12,9 +12,11 @@ const app = express();
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:5174',
+  'http://localhost:3000',
   'https://client-one-tau-24.vercel.app',
   'https://client-lhte9ajba-aniruths-projects-6073edd4.vercel.app',
   'https://client-mfhc8gji2-aniruths-projects-6073edd4.vercel.app',
+  'https://nextjs-client-3wpuo2fey-aniruths-projects-6073edd4.vercel.app',
   process.env.CLIENT_URL
 ].filter(Boolean);
 
