@@ -437,7 +437,22 @@
 }
 
 .specialistCard {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.specialistHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.specialistInfo {
+  flex: 1;
+  text-align: left;
 }
 
 .specialistIcon {
@@ -448,21 +463,20 @@
   justify-content: center;
   background: linear-gradient(135deg, var(--primary-blue), var(--accent-teal));
   border-radius: 50%;
-  margin: 0 auto var(--spacing-md);
   color: var(--white);
+  flex-shrink: 0;
 }
 
 .specialistCard h3 {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);
   color: var(--gray-900);
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: var(--spacing-xs);
 }
 
 .specialistDomain {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: var(--spacing-xs);
   color: var(--primary-blue);
   font-weight: var(--font-weight-medium);
@@ -478,6 +492,110 @@
   color: var(--gray-600);
   font-size: var(--font-size-sm);
   margin: 0;
+}
+
+.slotsSummary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--gray-50);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-sm);
+}
+
+.slotsCount {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: var(--gray-700);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+}
+
+.slotsCount svg {
+  color: var(--primary-blue);
+  flex-shrink: 0;
+}
+
+.viewSlotsBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  background: none;
+  border: none;
+  color: var(--primary-blue);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.viewSlotsBtn:hover {
+  background: var(--primary-blue);
+  color: var(--white);
+}
+
+.slotsExpanded {
+  animation: slideDown 0.3s ease-out;
+  border-top: 1px solid var(--gray-200);
+  padding-top: var(--spacing-md);
+}
+
+.slotsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.slotItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md);
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.slotItem:hover {
+  border-color: var(--primary-blue);
+  box-shadow: var(--shadow-md);
+}
+
+.slotInfo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  flex: 1;
+}
+
+.slotDate,
+.slotTime,
+.slotSeats {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: var(--gray-600);
+  font-size: var(--font-size-sm);
+}
+
+.slotDate svg,
+.slotTime svg,
+.slotSeats svg {
+  color: var(--primary-blue);
+  flex-shrink: 0;
+}
+
+.slotPrice {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--primary-blue);
+  padding-left: var(--spacing-md);
+  border-left: 2px solid var(--gray-200);
 }
 
 .loadingSpinner {
