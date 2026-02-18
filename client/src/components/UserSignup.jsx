@@ -87,7 +87,7 @@ function UserSignup({ onLoginSuccess }) {
     setLoading(true);
 
     try {
-      const response = await axios.post(`${API_URL}/api/auth/register`, {
+      const response = await axios.post(`${API_URL}/api/auth/signup`, {
         ...formData,
         role: 'user', // Always user role
       });

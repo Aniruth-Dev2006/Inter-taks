@@ -4,8 +4,8 @@ const User = require("../models/User");
 
 const router = express.Router();
 
-// Register
-router.post("/register", async (req, res) => {
+// Register/Signup
+router.post("/signup", async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
 
@@ -79,40 +79,6 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 });
-
-// Google OAuth
-router.get(
-  "/google",
-  passport.authenticate("google", {
-    scope: ["profile", "email"],
-  })
-);
-
-// Google OAuth Callback
-router.get(
-  "/google/callback",
-  passport.authenticate("google", {
-    failureRedirect: process.env.CLIENT_URL || "http://localhost:5174",
-  }),
-  (req, res) => {
-    console.log("OAuth callback reached");
-    console.log("User:", req.user);
-    
-    // Successful authentication
-    const user = {
-      id: req.user._id,
-      name: req.user.name,
-      email: req.user.email,
-      role: req.user.role,
-    };
-    
-    // Redirect to frontend with user data
-    const userString = encodeURIComponent(JSON.stringify(user));
-    const redirectUrl = `${process.env.CLIENT_URL || "http://localhost:5174"}/auth/success?user=${userString}`;
-    console.log("Redirecting to:", redirectUrl);
-    res.redirect(redirectUrl);
-  }
-);
 
 // Get current user
 router.get("/me/:id", async (req, res) => {

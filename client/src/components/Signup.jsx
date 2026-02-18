@@ -27,7 +27,7 @@ function Signup({ onSwitchToLogin, onSignupSuccess }) {
     setLoading(true);
 
     try {
-      const response = await axios.post(`${API_URL}/api/auth/register`, formData);
+      const response = await axios.post(`${API_URL}/api/auth/signup`, formData);
 
       if (response.data.user) {
         localStorage.setItem('user', JSON.stringify(response.data.user));

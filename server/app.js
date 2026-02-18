@@ -1,8 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const session = require("express-session");
-const passport = require("./config/passport");
+// OAuth removed - session and passport no longer needed
+// const session = require("express-session");
+// const passport = require("./config/passport");
 require("dotenv").config();
 
 const app = express();
@@ -33,23 +34,24 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// OAuth removed - session and passport middleware no longer needed
 // Session middleware
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET || "your-secret-key",
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      secure: false, // Set to true in production with HTTPS
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    },
-  })
-);
+// app.use(
+//   session({
+//     secret: process.env.SESSION_SECRET || "your-secret-key",
+//     resave: false,
+//     saveUninitialized: true,
+//     cookie: {
+//       secure: false, // Set to true in production with HTTPS
+//       httpOnly: true,
+//       maxAge: 24 * 60 * 60 * 1000, // 24 hours
+//     },
+//   })
+// );
 
 // Passport middleware
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 // MongoDB Connection
 const mongoUri = process.env.MONGODB_URI || "mongodb://localhost:27017/slot-booking";
