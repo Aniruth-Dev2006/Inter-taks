@@ -10,6 +10,7 @@ export default function UserDashboard({ user }) {
   const [activeTab, setActiveTab] = useState('available');
   const [loading, setLoading] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
+  const [selectedTeacher, setSelectedTeacher] = useState(null);
   const [toast, setToast] = useState(null);
   const [razorpayLoaded, setRazorpayLoaded] = useState(false);
 
@@ -165,6 +166,26 @@ export default function UserDashboard({ user }) {
     slot.availableSeats > 0 && !slot.bookedBy?.some(id => id === user.id)
   );
 
+  // Group slots by teacher
+  const teachersWithSlots = slots.reduce((acc, slot) => {
+    const teacherId = slot.teacher?._id || slot.teacherName;
+    if (!acc[teacherId]) {
+      acc[teacherId] = {
+        id: teacherId,
+        name: slot.teacherName,
+        subject: slot.subject,
+        department: slot.teacher?.department || '',
+        slots: []
+      };
+    }
+    if (slot.availableSeats > 0 && !slot.bookedBy?.some(id => id === user.id)) {
+      acc[teacherId].slots.push(slot);
+    }
+    return acc;
+  }, {});
+
+  const teachersList = Object.values(teachersWithSlots).filter(t => t.slots.length > 0);
+
   return (
     <div className={styles.dashboard}>
       {toast && (
@@ -197,7 +218,16 @@ export default function UserDashboard({ user }) {
             <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd"/>
             </svg>
-            Available Slots <span className="badge badge-info">{availableSlots.length}</span>
+            All Slots <span className="badge badge-info">{availableSlots.length}</span>
+          </button>
+          <button
+            className={`${styles.tab} ${activeTab === 'specialists' ? styles.active : ''}`}
+            onClick={() => { setActiveTab('specialists'); setSelectedTeacher(null); }}
+          >
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+            </svg>
+            By Specialist <span className="badge badge-primary">{teachersList.length}</span>
           </button>
           <button
             className={`${styles.tab} ${activeTab === 'bookings' ? styles.active : ''}`}
@@ -213,7 +243,156 @@ export default function UserDashboard({ user }) {
       </div>
 
       <div className={styles.tabContent}>
-        {activeTab === 'available' ? (
+        {activeTab === 'specialists' ? (
+          <div className={styles.specialistsView}>
+            {selectedTeacher ? (
+              <div className={styles.teacherDetails}>
+                <button 
+                  onClick={() => setSelectedTeacher(null)} 
+                  className="btn btn-secondary"
+                  style={{ marginBottom: 'var(--spacing-lg)' }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" style={{ marginRight: '8px' }}>
+                    <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd"/>
+                  </svg>
+                  Back to Specialists
+                </button>
+                <div className="card" style={{ marginBottom: 'var(--spacing-lg)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)' }}>
+                    <div style={{ 
+                      width: '64px', 
+                      height: '64px', 
+                      borderRadius: '50%', 
+                      background: 'linear-gradient(135deg, var(--primary-blue), var(--accent-teal))', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center',
+                      color: 'white'
+                    }}>
+                      <svg width="32" height="32" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd"/>
+                      </svg>
+                    </div>
+                    <div>
+                      <h2 style={{ marginBottom: 'var(--spacing-xs)' }}>{selectedTeacher.name}</h2>
+                      <span className="badge badge-info">{selectedTeacher.subject}</span>
+                      {selectedTeacher.department && (
+                        <span className="badge badge-secondary" style={{ marginLeft: 'var(--spacing-xs)' }}>
+                          {selectedTeacher.department}
+                        </span>
+                      )}
+                      <p style={{ marginTop: 'var(--spacing-sm)', color: 'var(--gray-600)' }}>
+                        {selectedTeacher.slots.length} available slot{selectedTeacher.slots.length !== 1 ? 's' : ''}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className={styles.slotsGrid}>
+                  {selectedTeacher.slots.map(slot => (
+                    <div key={slot._id} className={`card ${styles.slotCard}`}>
+                      <div className={styles.slotDetails}>
+                        <div className={styles.detailRow}>
+                          <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd"/>
+                          </svg>
+                          <span>{slot.date}</span>
+                        </div>
+                        <div className={styles.detailRow}>
+                          <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd"/>
+                          </svg>
+                          <span>{slot.startTime} - {slot.endTime}</span>
+                        </div>
+                        <div className={styles.detailRow}>
+                          <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                          </svg>
+                          <span>{slot.availableSeats}/{slot.capacity} seats available</span>
+                        </div>
+                        {slot.description && (
+                          <p className={styles.description}>{slot.description}</p>
+                        )}
+                      </div>
+                      <button
+                        onClick={() => handleBookSlot(slot)}
+                        className="btn btn-primary"
+                        style={{ width: '100%' }}
+                      >
+                        Book Slot - ₹{slot.price || 500}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className={styles.teachersGrid}>
+                {loading ? (
+                  <div className={styles.loadingState}>
+                    <div className="spinner"></div>
+                    <p>Loading specialists...</p>
+                  </div>
+                ) : teachersList.length === 0 ? (
+                  <div className={styles.emptyState}>
+                    <svg width="64" height="64" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                    <p>No specialists with available slots</p>
+                  </div>
+                ) : (
+                  teachersList.map(teacher => (
+                    <div 
+                      key={teacher.id} 
+                      className={`card ${styles.teacherCard}`}
+                      onClick={() => setSelectedTeacher(teacher)}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)', marginBottom: 'var(--spacing-md)' }}>
+                        <div style={{ 
+                          width: '48px', 
+                          height: '48px', 
+                          borderRadius: '50%', 
+                          background: 'linear-gradient(135deg, var(--primary-blue), var(--accent-teal))', 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'center',
+                          color: 'white'
+                        }}>
+                          <svg width="24" height="24" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd"/>
+                          </svg>
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <h3 style={{ marginBottom: 'var(--spacing-xs)' }}>{teacher.name}</h3>
+                          <span className="badge badge-info">{teacher.subject}</span>
+                        </div>
+                      </div>
+                      <div style={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'space-between',
+                        padding: 'var(--spacing-sm)',
+                        background: 'var(--gray-50)',
+                        borderRadius: 'var(--radius-md)'
+                      }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)' }}>
+                          <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor" style={{ color: 'var(--primary-blue)' }}>
+                            <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd"/>
+                          </svg>
+                          <span style={{ fontWeight: 'var(--font-weight-semibold)' }}>
+                            {teacher.slots.length} slot{teacher.slots.length !== 1 ? 's' : ''} available
+                          </span>
+                        </div>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" style={{ color: 'var(--gray-400)' }}>
+                          <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"/>
+                        </svg>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
+        ) : activeTab === 'available' ? (
           <div className={styles.slotsGrid}>
             {loading ? (
               <div className={styles.loadingState}>

@@ -237,9 +237,39 @@
   color: var(--gray-600);
 }
 
+/* Specialists View */
+.specialistsView {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.teachersGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.teacherCard {
+  transition: all var(--transition-base);
+  border: 2px solid transparent;
+}
+
+.teacherCard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary-blue);
+}
+
+.teacherDetails {
+  animation: fadeIn 0.3s ease-out;
+}
+
 @media (max-width: 768px) {
   .slotsGrid,
   .bookingsList {
+    grid-template-columns: 1fr;
+  }
+
+  .teachersGrid {
     grid-template-columns: 1fr;
   }
 
